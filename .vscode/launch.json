@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\ScrapeHouse.js"
+            "program": "${workspaceFolder}\\App\\App.js"
         }
     ]
 }
