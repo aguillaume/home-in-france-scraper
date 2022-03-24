@@ -1,4 +1,3 @@
-import * as webScraper from "../WebScraper.js"
 import * as propertiesRepo from "../PropertiesRepo.js"
 import * as cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
@@ -9,7 +8,6 @@ const url = baseUrl+"/recherche/buy?realEstateTypes%5B%5D=maison&locations%5B0%5
 const dataFileName = "orpiProperties";
 
 async function scrapeData() {
-    //const rawData = await webScraper.getRawData(url);
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url, {waitUntil: "load"});
