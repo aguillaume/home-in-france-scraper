@@ -3,6 +3,7 @@ import * as notification from "./Notification.js"
 import * as laForet from "./Scrapers/LaForet.js"
 import * as orpi from "./Scrapers/Orpi.js"
 import * as immoDuParticulier from "./Scrapers/ImmoDuParticulier.js"
+import * as johnCie from "./Scrapers/JohnCie.js"
 
 console.log(`Let the scraping commence...`);
 
@@ -20,6 +21,13 @@ const immoDuParticulierProperties =
     immoDuParticulier.scrapeData()
         .then(handleScrapedData(immoDuParticulier, "Immo Du Particulier"))
         .catch(err => console.error(err));
+// try {
+//     const johnCieProperties = 
+//         johnCie.scrapeData();
+    
+// } catch (error) {
+//     console.error(error);
+// }
 
 const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties];
 const potentialHouses = await Promise.allSettled(scrapers)
