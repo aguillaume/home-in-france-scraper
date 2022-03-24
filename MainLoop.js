@@ -12,9 +12,9 @@ while(true)
     log(chalk.yellow.bold(`End Time of Scrape: ${getLogDate()}`));
 
     // 900,000 seconds is 15 minutes
-    const sleepTime = 60000;
+    const sleepTime = 900000;
     log(chalk.blue.bold(`Waiting for ${sleepTime/60000} minutes before next scrape.`));
-    
+
     await sleep(sleepTime);
 }
 
