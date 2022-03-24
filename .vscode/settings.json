@@ -4,5 +4,6 @@
         "Immo",
         "Orpi",
         "Particulier"
-    ]
+    ],
+    "appService.showBuildDuringDeployPrompt": false
 }
