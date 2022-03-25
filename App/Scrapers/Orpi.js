@@ -8,7 +8,7 @@ const url = baseUrl+"/recherche/buy?realEstateTypes%5B%5D=maison&locations%5B0%5
 const dataFileName = "orpiProperties";
 
 async function scrapeData() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.connect({ browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_KEY}` }) //await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url, {waitUntil: "load"});
     const rawData = await page.content();
