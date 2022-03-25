@@ -1,11 +1,12 @@
 {
-  "name": "housescraper",
+  "name": "housecraper",
   "version": "1.0.0",
   "description": "Get all the house infos",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node MainLoop.js"
+    "start": "node MainLoop.js",
+    "startWeb": "node ./Server/bin/www"
   },
   "author": "Gui & Rok",
   "license": "ISC",
@@ -14,6 +15,10 @@
     "cheerio": "^1.0.0-rc.10",
     "node-fetch": "^3.2.3",
     "nodemailer": "^6.7.2",
-    "puppeteer": "^13.5.1"
+    "puppeteer": "^13.5.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
   }
 }
