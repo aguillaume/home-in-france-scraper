@@ -73,15 +73,15 @@ function normalizePort(val) {
 }
 
 function startScraper() {
-    // try {
-    //     var myWorker = new Worker('./MainLoop.js');
-    //     myWorker.onmessage = function (e) {
-    //         console.log(`Message received from worker: ${e.data}`);
-    //     }
+    try {
+        var myWorker = new Worker('./MainLoop.js');
+        myWorker.onmessage = function (e) {
+            console.log(`Message received from worker: ${e.data}`);
+        }
 
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export default app;
