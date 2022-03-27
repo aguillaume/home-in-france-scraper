@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node MainLoop.js",
-    "startWeb": "node ./Server/bin/www"
+    "start": "node ./Server/bin/www"
   },
   "author": "Gui & Rok",
   "license": "ISC",
