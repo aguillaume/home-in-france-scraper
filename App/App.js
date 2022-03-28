@@ -4,6 +4,7 @@ import * as laForet from "./Scrapers/LaForet.js"
 import * as orpi from "./Scrapers/Orpi.js"
 import * as immoDuParticulier from "./Scrapers/ImmoDuParticulier.js"
 import * as scraperKeepAlive from "./Scrapers/ScraperKeepAlive.js"
+import * as bienIci from "./Scrapers/BienIci.js"
 
 async function run() {
     console.log(`Let the scraping commence...`);
@@ -23,9 +24,14 @@ async function run() {
             .then(handleScrapedData(immoDuParticulier, "Immo Du Particulier"))
             .catch(err => console.error(err));
 
-    const keepAlive = scraperKeepAlive.scrapeData();
+    // const keepAlive = scraperKeepAlive.scrapeData();
+
+    // const bienIciProperties = 
+    //     bienIci.scrapeData()
+    //         .then(handleScrapedData(bienIci, "Bien Ici"))
+    //         .catch(err => console.error(err));
     
-    const scrapers = [keepAlive,laForetProperties, orpiProperties, immoDuParticulierProperties];
+    const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties];
     const potentialHouses = await Promise.allSettled(scrapers)
         .then((results) => {
             let allNewProperties = [];
