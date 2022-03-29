@@ -48,7 +48,7 @@ async function run(context) {
         ctx.log(JSON.stringify(potentialHouses, null, 2));
         
         // email the new properties
-        notification.sendEmail(ctx, potentialHouses, `There are new properties`)
+        await notification.sendEmail(ctx, potentialHouses, `There are new properties`)
     } 
     
     ctx.log(`Scraping done!`);
