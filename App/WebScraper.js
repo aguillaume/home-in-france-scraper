@@ -1,4 +1,5 @@
-import fetch from "node-fetch"
+// import fetch from "node-fetch"
+const fetch = require("node-fetch");
 
 async function getRawData (url) {
     const res = await fetch(url);
@@ -6,4 +7,4 @@ async function getRawData (url) {
     return data;
 }
 
-export { getRawData };
+module.exports = { getRawData };

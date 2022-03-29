@@ -5,5 +5,10 @@
         "Orpi",
         "Particulier"
     ],
-    "appService.showBuildDuringDeployPrompt": false
+    "azureFunctions.deploySubpath": ".",
+    "azureFunctions.projectLanguage": "JavaScript",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.scmDoBuildDuringDeployment": true
+
 }

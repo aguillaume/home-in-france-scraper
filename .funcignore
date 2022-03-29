@@ -1,0 +1,12 @@
+*.js.map
+*.ts
+.git*
+.vscode
+local.settings.json
+test
+tsconfig.json
+node_modules
+# Azurite artifacts
+__blobstorage__
+__queuestorage__
+__azurite_db*__.json
