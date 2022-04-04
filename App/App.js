@@ -1,14 +1,10 @@
-// import * as PropertyComparerJs from "./PropertyComparer.js"
 const propertyComparer = require("./PropertyComparer")
-// import * as notification from "./Notification.js"
 const notification = require("./Notification")
-// import * as laForet from "./Scrapers/LaForet.js"
 const laForet = require("./Scrapers/LaForet")
-// import * as orpi from "./Scrapers/Orpi.js"
 const orpi = require("./Scrapers/Orpi")
-// import * as immoDuParticulier from "./Scrapers/ImmoDuParticulier.js"
 const immoDuParticulier = require("./Scrapers/ImmoDuParticulier")
-// import * as scraperKeepAlive from "./Scrapers/ScraperKeepAlive.js"
+const bienIci = require("./Scrapers/BienIci.js")
+
 let ctx = null;
 
 async function run(context) {
@@ -30,7 +26,13 @@ async function run(context) {
             .then(handleScrapedData(immoDuParticulier, "Immo Du Particulier"))
             .catch(err => ctx.log(err));
 
-    const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties];
+    const bienIciProperties = 
+        bienIci.scrapeData(ctx)
+            .then(handleScrapedData(bienIci, "Bien Ici"))
+            .catch(err => ctx.error(err));
+    
+    const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties, bienIciProperties];
+        
     const potentialHouses = await Promise.allSettled(scrapers)
         .then((results) => {
             let allNewProperties = [];
