@@ -1,0 +1,24 @@
+{
+  "bindings": [
+    {
+      "name": "myTimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 */10 * * * *"
+    },
+    {
+      "name": "InputBlobTestSaveData",
+      "type": "blob",
+      "path": "homeinfrancescraper/test-save-data",
+      "connection": "AzureWebJobsStorage",
+      "direction": "in"
+    },
+    {
+      "name": "OutputBlobTestSaveData",
+      "type": "blob",
+      "path": "homeinfrancescraper/test-save-data",
+      "connection": "AzureWebJobsStorage",
+      "direction": "out"
+    }
+  ]
+}
