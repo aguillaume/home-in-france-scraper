@@ -1,34 +1,28 @@
 
-import * as propertiesRepo from "../PropertiesRepo.js"
-import * as cheerio from 'cheerio';
-import puppeteer from 'puppeteer';
+const propertiesRepo = require("../PropertiesRepo");
+const cheerio = require("cheerio");
+const puppeteer = require("puppeteer");
 
 // URL for data
 const baseUrl = "https://www.bienici.com";
-const url = baseUrl+"/recherche/achat/dessin-623b32310dbe7e00b77e96ab/maisonvilla?prix-max=500000&surface-min=80&camera=11_5.1052764_43.4244043_0.9_0";
+const url = baseUrl + "/recherche/achat/dessin-623b32310dbe7e00b77e96ab/maisonvilla?prix-max=500000&surface-min=80&camera=11_5.1052764_43.4244043_0.9_0";
 const dataFileName = "bienIciProperties";
+let ctx = null;
 
-async function scrapeData() {
-    const browser = await puppeteer.launch() // await puppeteer.connect({ browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_KEY}` });
+async function scrapeData(context) {
+    ctx = context ?? console;
+    
+    const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
-    await page.goto(url, {waitUntil: "load"});
+    await page.goto(url, { waitUntil: "networkidle2" });
+
     let rawPages = [];
-    rawPages.push(await page.content());
-    
-    while(true) {
-        let currentPage = await page.$(".pagination .currentPage");
-        let nextPage = await page.evaluateHandle(el => el.nextElementSibling, currentPage);
-        if(nextPage._page) {
-            
-        }
-
+    try {
+        rawPages = await getAllProperties(page);
+    } catch (error) {
+        ctx.log(error)
     }
-
-    let nextPage2 = await page.evaluateHandle(el => el.nextElementSibling, nextPage);
-    let nextPage3 = await page.evaluateHandle(el => el.nextElementSibling, nextPage2);
-
-
 
     browser.close();
     // parsing the data
@@ -40,7 +34,10 @@ async function scrapeData() {
 
         propertiesHtml.each((i, el) => {
             let property = {};
-            property.link = baseUrl + $(el).find(".detailsContent a").attr("href");
+            const rawLink = baseUrl + $(el).find(".detailsContent a").attr("href");
+            const linkQueryIndex = rawLink.indexOf("?q=");
+            const strippedLink = rawLink.substring(0, linkQueryIndex);
+            property.link = strippedLink;
             property.title = $(el).find(".detailsContent .descriptionTitle").text().trim();
             property.price = $(el).find(".detailsContent .descriptionPrice .thePrice").text().trim();
             properties.push(property);
@@ -50,14 +47,45 @@ async function scrapeData() {
     return properties;
 }
 
+async function getAllProperties(page) {
+    let rawPages = [];
+    // multi page search. Loop through every page
+    while (true) {
+        rawPages.push(await page.content());
+        // Wait for suggest overlay to appear and click "show all results".
+        const currentPageSelector = '.pagination .currentPage';
+        try {
+            await page.waitForSelector(currentPageSelector);
+        } catch (error) {
+            //only one page
+            break;
+        }
+
+        const link = await page.evaluate((currentPageSelector) => {
+            const nextSibling = document.querySelector(currentPageSelector).nextElementSibling;
+            if (nextSibling) {
+                return nextSibling.href;
+            }
+        }, currentPageSelector);
+
+        if(link) {
+            await page.goto(link, { waitUntil: "networkidle2" });
+        }else {
+            break;
+        }
+    }
+
+    return rawPages;
+}
+
 function readProperties() {
-    return propertiesRepo.readProperties(dataFileName);
+    return propertiesRepo.readProperties(ctx, dataFileName);
 }
 
 function saveProperties(liveProperties, diff) {
-    propertiesRepo.createChangeLog(dataFileName, diff);
-    propertiesRepo.updateProperties(dataFileName, liveProperties);
+    propertiesRepo.createChangeLog(ctx, dataFileName, diff);
+    propertiesRepo.updateProperties(ctx, dataFileName, liveProperties);
 }
 
 
-export { scrapeData, readProperties, saveProperties };
+module.exports = { scrapeData, readProperties, saveProperties };
