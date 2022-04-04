@@ -93,6 +93,13 @@ obj
 appsettings.json
 local.settings.json
 
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
 # Azurite artifacts
 __blobstorage__
 __queuestorage__
