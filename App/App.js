@@ -2,8 +2,8 @@ const propertyComparer = require("./PropertyComparer")
 const notification = require("./Notification")
 const LaForet = require("./Scrapers/LaForet")
 const ImmoDuParticulier = require("./Scrapers/ImmoDuParticulier")
-const orpi = require("./Scrapers/Orpi")
-const bienIci = require("./Scrapers/BienIci.js")
+const BienIci = require("./Scrapers/BienIci")
+const Orpi = require("./Scrapers/Orpi")
 
 let ctx = null;
 
@@ -12,33 +12,30 @@ async function run(context) {
     ctx.log(`Let the scraping commence...`);
     const laForet = new LaForet(ctx);
     const immoDuParticulier = new ImmoDuParticulier(ctx);
+    const bienIci = new BienIci(ctx);
+    const orpi = new Orpi(ctx);
 
-    // const laForetProperties = 
-    //     laForet.scrapeData()
-    //         .then(handleScrapedData(laForet))
-    //         .catch(err => ctx.log(err));
+    const laForetProperties = 
+        laForet.scrapeData()
+            .then(handleScrapedData(laForet))
+            .catch(err => ctx.log(err));
     
-    // const orpiProperties = 
-    //     orpi.scrapeData(ctx)
-    //         .then(handleScrapedData(orpi, "Orpi"))
-    //         .catch(err => ctx.log(err));
+    const orpiProperties = 
+        orpi.scrapeData()
+            .then(handleScrapedData(orpi))
+            .catch(err => ctx.log(err));
     
     const immoDuParticulierProperties = 
         immoDuParticulier.scrapeData()
             .then(handleScrapedData(immoDuParticulier))
             .catch(err => ctx.log(err));
 
-    // const bienIciProperties = 
-    //     bienIci.scrapeData(ctx)
-    //         .then(handleScrapedData(bienIci, "Bien Ici"))
-    //         .catch(err => ctx.error(err));
+    const bienIciProperties = 
+        bienIci.scrapeData()
+            .then(handleScrapedData(bienIci))
+            .catch(err => ctx.error(err));
     
-    const scrapers = [
-        //laForetProperties
-        //, orpiProperties, 
-        immoDuParticulierProperties
-        //, bienIciProperties
-     ];
+    const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties, bienIciProperties];
         
     const potentialHouses = await Promise.allSettled(scrapers)
         .then((results) => {
