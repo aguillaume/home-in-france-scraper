@@ -4,8 +4,7 @@
   "description": "Get all the house infos",
   "main": "index.js",
   "scripts": {
-    "start": "func start",
-    "startLocal": "node ./TestRun.js"
+    "start": "func start"
   },
   "author": "Gui & Rok",
   "license": "ISC",

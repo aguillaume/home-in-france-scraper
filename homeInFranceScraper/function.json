@@ -4,19 +4,19 @@
       "name": "myTimer",
       "type": "timerTrigger",
       "direction": "in",
-      "schedule": "0 */10 * * * *"
+      "schedule": "*/30 * * * * *"
     },
     {
       "name": "InputBlobTestSaveData",
       "type": "blob",
-      "path": "homeinfrancescraper/test-save-data",
+      "path": "homeinfrancescraper/test-save-data.json",
       "connection": "AzureWebJobsStorage",
       "direction": "in"
     },
     {
       "name": "OutputBlobTestSaveData",
       "type": "blob",
-      "path": "homeinfrancescraper/test-save-data",
+      "path": "homeinfrancescraper/test-save-data.json",
       "connection": "AzureWebJobsStorage",
       "direction": "out"
     }
