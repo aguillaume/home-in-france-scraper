@@ -77,7 +77,7 @@ class BienIci extends Scraper {
 
     #cleanPrice(price) {
         let cleanPrice = price.trim();
-        cleanPrice = cleanPrice.replaceAll("\u00a0", " ");
+        cleanPrice = cleanPrice.split("\u00a0").join(" ");
 
         return cleanPrice;
     }
@@ -90,7 +90,7 @@ class BienIci extends Scraper {
 
     #cleanTitle(title) {
         let cleanTitle = title.trim();
-        cleanTitle = cleanTitle.replaceAll('\u00a0', ' ')
+        cleanTitle = cleanTitle.split('\u00a0').join(' ');
 
         return cleanTitle;
     }

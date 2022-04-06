@@ -30,9 +30,9 @@ class LaForet extends Scraper {
     }
 
     #cleanPrice(price) {
-        let cleanPrice = price.replaceAll("\n", "").trim();
-        cleanPrice = cleanPrice.replaceAll("\u202f", " ");
-        cleanPrice = cleanPrice.replaceAll("\u00a0", " ");
+        let cleanPrice = price.split("\n").join("").trim();
+        cleanPrice = cleanPrice.split("\u202f").join(" ");
+        cleanPrice = cleanPrice.split("\u00a0").join(" ");
 
         return cleanPrice;
     }

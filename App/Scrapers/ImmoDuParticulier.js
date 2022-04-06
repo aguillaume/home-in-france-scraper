@@ -30,7 +30,7 @@ class ImmoDuParticulier extends Scraper {
 
     #cleanPrice(price) {
         let cleanPrice = price.trim();
-        cleanPrice = cleanPrice.replaceAll("\u00a0", " ");
+        cleanPrice = cleanPrice.split("\u00a0").join(" ");
 
         return cleanPrice;
     }
