@@ -23,14 +23,10 @@ async function sendEmail(context, properties, emailSubject) {
             text: JSON.stringify(properties, null, 2)
         };
     
-        const sendResult = await transporter.sendMail(mailOptions);
-
-        if (sendResult.rejected) {
-            ctx.log(err);
-        } else {
-            ctx.log('Email sent: ' + info.response);
-        }
-    } catch (err) {
+        const info = await transporter.sendMail(mailOptions);
+        ctx.log(`Email sent: ${info.messageId}`);
+    } 
+    catch (err) {
         ctx.log("Failed to send email.");
         ctx.log(err);
     }
