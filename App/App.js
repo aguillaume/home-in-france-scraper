@@ -1,8 +1,8 @@
 const propertyComparer = require("./PropertyComparer")
 const notification = require("./Notification")
 const LaForet = require("./Scrapers/LaForet")
+const ImmoDuParticulier = require("./Scrapers/ImmoDuParticulier")
 const orpi = require("./Scrapers/Orpi")
-const immoDuParticulier = require("./Scrapers/ImmoDuParticulier")
 const bienIci = require("./Scrapers/BienIci.js")
 
 let ctx = null;
@@ -11,28 +11,33 @@ async function run(context) {
     ctx = context ?? console;
     ctx.log(`Let the scraping commence...`);
     const laForet = new LaForet(ctx);
-    const laForetProperties = 
-        laForet.scrapeData()
-            .then(handleScrapedData(laForet))
-            .catch(err => ctx.log(err));
+    const immoDuParticulier = new ImmoDuParticulier(ctx);
+
+    // const laForetProperties = 
+    //     laForet.scrapeData()
+    //         .then(handleScrapedData(laForet))
+    //         .catch(err => ctx.log(err));
     
     // const orpiProperties = 
     //     orpi.scrapeData(ctx)
     //         .then(handleScrapedData(orpi, "Orpi"))
     //         .catch(err => ctx.log(err));
     
-    // const immoDuParticulierProperties = 
-    //     immoDuParticulier.scrapeData(ctx)
-    //         .then(handleScrapedData(immoDuParticulier, "Immo Du Particulier"))
-    //         .catch(err => ctx.log(err));
+    const immoDuParticulierProperties = 
+        immoDuParticulier.scrapeData()
+            .then(handleScrapedData(immoDuParticulier))
+            .catch(err => ctx.log(err));
 
     // const bienIciProperties = 
     //     bienIci.scrapeData(ctx)
     //         .then(handleScrapedData(bienIci, "Bien Ici"))
     //         .catch(err => ctx.error(err));
     
-    const scrapers = [laForetProperties
-        //, orpiProperties, immoDuParticulierProperties, bienIciProperties
+    const scrapers = [
+        //laForetProperties
+        //, orpiProperties, 
+        immoDuParticulierProperties
+        //, bienIciProperties
      ];
         
     const potentialHouses = await Promise.allSettled(scrapers)

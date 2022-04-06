@@ -23,11 +23,11 @@ class PropertiesRepo {
     }
 
     readPropertyHistory(fileName) {
+        let propertyHistory = new Map();
         try {
-            let propertyHistory = new Map();
             if (!this.ctx.bindings.InputBlobTestSaveData) return propertyHistory;
             
-            let changeLog = this.ctx.bindings.InputBlobTestSaveData[fileName]?.changeLog;
+            let changeLog = this.ctx.bindings.InputBlobTestSaveData[fileName]?.changeLog ?? [];
 
             for (const change of changeLog) {
                 const propertiesAdded = change?.diff?.propertiesAdded?.new;
@@ -39,11 +39,10 @@ class PropertiesRepo {
                     propertyHistory.set(key, property);
                 }
             }
-            return propertyHistory;
-        } catch (error) {
-            
+        } catch (err) {
+            this.ctx.log(err)
         }
-        
+        return propertyHistory;
     }
 
     updateProperties(fileName, properties) {
