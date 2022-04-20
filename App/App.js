@@ -4,6 +4,7 @@ const LaForet = require("./Scrapers/LaForet")
 const ImmoDuParticulier = require("./Scrapers/ImmoDuParticulier")
 const BienIci = require("./Scrapers/BienIci")
 const Orpi = require("./Scrapers/Orpi")
+const AtHomeImmobilier = require("./Scrapers/AtHomeImmobilier")
 
 let ctx = null;
 
@@ -14,6 +15,7 @@ async function run(context) {
     const immoDuParticulier = new ImmoDuParticulier(ctx);
     const bienIci = new BienIci(ctx);
     const orpi = new Orpi(ctx);
+    const atHomeImmobilier = new AtHomeImmobilier(ctx);
 
     const laForetProperties = 
         laForet.scrapeData()
@@ -34,8 +36,14 @@ async function run(context) {
         bienIci.scrapeData()
             .then(handleScrapedData(bienIci))
             .catch(err => ctx.error(err));
+
+    const atHomeImmobilierProperties = 
+        atHomeImmobilier.scrapeData()
+            .then(handleScrapedData(atHomeImmobilier))
+            .catch(err => ctx.error(err));
     
-    const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties, bienIciProperties];
+    const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties, bienIciProperties, atHomeImmobilierProperties
+    ];
         
     const potentialHouses = await Promise.allSettled(scrapers)
         .then((results) => {
