@@ -1,44 +1,41 @@
-// import * as webScraper from "../WebScraper.js"
+const Scraper = require('./Scraper')
 const webScraper = require("../WebScraper");
-// import * as propertiesRepo from "../PropertiesRepo.js"
-const propertiesRepo = require("../PropertiesRepo");
-// import * as cheerio from 'cheerio';
 const cheerio = require("cheerio");
 
-const baseUrl = "https://www.laforet.com";
-const url = baseUrl+"/acheter/achat-maison?filter%5Bcities%5D=13117%2C3000874%2C13015&filter%5Barea%5D=43.4509%2C5.2654%2C10%2CVitrolles&filter%5Bmax%5D=500000&filter%5Bbedrooms%5D=3&filter%5Bsurface%5D=90&filter%5Bsurface_ground%5D=400";
-const dataFileName = "laForetProperties";
+class LaForet extends Scraper {
 
-let ctx = null;
-async function scrapeData(context) {
-    ctx = context ?? console;
-    const rawData = await webScraper.getRawData(url);
+    baseUrl = "https://www.laforet.com";
+    url = this.baseUrl+"/acheter/achat-maison?filter%5Bcities%5D=13117%2C3000874%2C13015&filter%5Barea%5D=43.4509%2C5.2654%2C10%2CVitrolles&filter%5Bmax%5D=500000&filter%5Bbedrooms%5D=3&filter%5Bsurface%5D=90&filter%5Bsurface_ground%5D=400";
 
-    // parsing the data
-    const $ = cheerio.load(rawData);
+    constructor(context) {
+        super(context, LaForet.name)
+      }
 
-    let propertiesHtml = $(".property-card");
+    async scrapeData() {
+        const rawData = await webScraper.getRawData(this.url);
+        const $ = cheerio.load(rawData);
     
-    let properties = [];
-    propertiesHtml.each((i, el) => {
-        let property = { title:"", price:""};
-        property.link = baseUrl + $(el).children("a").attr("href");
-        property.title = $(el).find(".property-card__title").text().trim();
-        property.price = $(el).find(".property-card__price").text().replace("\n", "").trim();
-        properties.push(property);
-    });
+        let propertiesHtml = $(".property-card");
+        
+        let properties = [];
+        propertiesHtml.each((i, el) => {
+            let property = { title:"", price:""};
+            property.link = this.baseUrl + $(el).children("a").attr("href");
+            property.title = $(el).find(".property-card__title").text().trim();
+            property.price = this.#cleanPrice($(el).find(".property-card__price").text());
+            properties.push(property);
+        });
+    
+        return properties;
+    }
 
-    return properties;
+    #cleanPrice(price) {
+        let cleanPrice = price.split("\n").join("").trim();
+        cleanPrice = cleanPrice.split("\u202f").join(" ");
+        cleanPrice = cleanPrice.split("\u00a0").join(" ");
+
+        return cleanPrice;
+    }
 }
 
-function readProperties() {
-    return propertiesRepo.readProperties(ctx, dataFileName);
-}
-
-function saveProperties(liveProperties, diff) {
-    propertiesRepo.createChangeLog(ctx, dataFileName, diff);
-    propertiesRepo.updateProperties(ctx, dataFileName, liveProperties);
-}
-
-
-module.exports = { scrapeData, readProperties, saveProperties };
+module.exports = LaForet;
