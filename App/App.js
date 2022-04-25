@@ -40,7 +40,7 @@ async function run(context) {
     const atHomeImmobilierProperties = 
         atHomeImmobilier.scrapeData()
             .then(handleScrapedData(atHomeImmobilier))
-            .catch(err => ctx.error(err));
+            .catch(err => ctx.log(err));
     
     const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties, bienIciProperties, atHomeImmobilierProperties
     ];

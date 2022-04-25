@@ -13,28 +13,37 @@ class AtHomeImmobilier extends Scraper {
       }
 
     async scrapeData() {
-        const browser = await puppeteer.launch({headless: false});
+        const browser = await puppeteer.launch();
     
         const page = await browser.newPage();
         await page.goto(this.url, { waitUntil: "networkidle2" });
         
-        const closeCookieBannerButton = "#cookie-banner > a";
-        
-        try {
-            await page.waitForSelector(closeCookieBannerButton);
-            await page.click(closeCookieBannerButton)
-        } catch {}
+        const closeCookieBannerSelector = "#cookie-banner > a";
 
-        const showMoreButton = '#next_page_listing';
-        while(true) {
+        try {
+            await page.waitForSelector(closeCookieBannerSelector, {timeout: 10000});
+            await page.click(closeCookieBannerSelector)
+        } catch {
+            this.ctx.log("cookie close fail or not found")
+        }
+
+        const showMoreSelector = '#next_page_listing';
+        const loadingSelector = "#loading_img_listing";
+
+        let isShowMoreVisible = await this.#isVisible(page, showMoreSelector);
+        let isLoadingMoreVisible = await this.#isVisible(page, loadingSelector);
+
+        while(isShowMoreVisible || isLoadingMoreVisible) {
             try {
-                await page.waitForSelector(showMoreButton, {visible: true});
-                await page.click(showMoreButton)
+                await page.waitForSelector(showMoreSelector, {visible: true, timeout: 10000});
+                await page.click(showMoreSelector)
             } catch (error) {
                 // waitForSelector throws an error when not found
                 break;
             }
 
+            isShowMoreVisible = await this.#isVisible(page, showMoreSelector);
+            isLoadingMoreVisible = await this.#isVisible(page, loadingSelector);
         }
         const rawData = await page.content();
     
@@ -59,6 +68,13 @@ class AtHomeImmobilier extends Scraper {
         });
     
         return properties;
+    }
+
+    async #isVisible(page, selector) {
+        return await page.evaluate((el) => {
+            const e = document.querySelector(el);
+            return !!(e.offsetWidth || e.offsetHeight || e.getClientRects().length);
+        }, selector);
     }
 
     #cleanPrice(price) {
