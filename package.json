@@ -9,8 +9,10 @@
   "author": "Gui & Rok",
   "license": "ISC",
   "dependencies": {
+    "azure-storage": "^2.10.7",
     "chalk": "^5.0.1",
     "cheerio": "^1.0.0-rc.10",
+    "durable-functions": "^1.5.4",
     "node-fetch": "^2",
     "nodemailer": "^6.7.2",
     "puppeteer": "^13.5.1"

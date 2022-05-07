@@ -1,0 +1,9 @@
+{
+  "bindings": [
+    {
+      "name": "LaForetScraper",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}
