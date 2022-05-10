@@ -9,6 +9,12 @@
  *   function app in Kudu
  */
 
-module.exports = async function (context) {
-    return `Hello ${context.bindings.name}!`;
+module.exports = async function (ctx, info) {
+    if(info.type == "Error") {
+        ctx.log("An error email has been sent")
+        return;
+    }
+
+    ctx.log("A notification email has been sent")
+    return;
 };

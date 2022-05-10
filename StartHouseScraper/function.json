@@ -4,7 +4,7 @@
       "name": "StartHouseScraperTimer",
       "type": "timerTrigger",
       "direction": "in",
-      "schedule": "* 0/15 * * * *"
+      "schedule": "* * * 1 * *"
     },
     {
       "name": "starter",

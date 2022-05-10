@@ -10,7 +10,7 @@
  */
 
 const df = require("durable-functions");
-const scrapers = ["LaForetScraper"];
+const scrapers = ["LaForetScraper", "LaForetScraper", "LaForetScraper", "LaForetScraper"];
 
 function log(ctx, msg) {
     if (!ctx.df.isReplaying) ctx.log(msg);
@@ -22,22 +22,39 @@ module.exports = df.orchestrator(function* (ctx) {
     const theInput = ctx.df.getInput();
 
     let tasks = [];
+    let id = 1;
     for (const scraper of scrapers) {
-        tasks.push(ctx.df.callActivity(scraper));
+        tasks.push(ctx.df.callActivity(scraper, id));
+        id++;
     }
 
-    // wait for all the scrapers Activities to complete
-    const allLiveProperties = yield ctx.df.Task.all(tasks);
-    log(ctx, `${allLiveProperties.length} agencies scraped`)
+    let allLiveProperties = [];
+    try {
+        // wait for all the scrapers Activities to complete
+        allLiveProperties = yield ctx.df.Task.all(tasks);
+        log(ctx, `${allLiveProperties.length} agencies scraped`)
+    }
+    catch (error) {
+        // Call Activity to notify of new properties
+        log(ctx, `Error from waiting all tasks`)
+        log(ctx, error.message)
+        yield ctx.df.callActivity("EmailNotification", {type: "Error", error: error});
+        for(const task of tasks) {
+            if(!task.isFaulted) {
+                allLiveProperties.push(task.result)
+            }
+        }
+    }
 
-    // // Call Activity that compares live properties with stored ones, and wait for it to finish
+    // Call Activity that compares live properties with stored ones, and wait for it to finish
     const newProperties = yield ctx.df.callActivity("PropertyComparer", allLiveProperties);
 
     if(newProperties.length > 0) {
 
         // Call Activity to notify of new properties
-        ctx.df.callActivity("EmailNotification", newProperties);
+        log(ctx, `There are new properties send an email!`)
+        yield ctx.df.callActivity("EmailNotification", newProperties);
     }
     
-    return ctx.instanceId;
+    return ctx.df.instanceId;
 });
