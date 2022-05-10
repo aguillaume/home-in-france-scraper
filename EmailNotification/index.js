@@ -27,7 +27,7 @@ module.exports = async function (ctx, data) {
             from: 'gllm.lp.17@gmail.com',
             to: data.type == "Error" ? 'guillaumealpe@hotmail.com' : 'guillaumealpe@hotmail.com, roksana.bln@gmail.com',
             subject: data.type == "Error" ? "Home In France Scraper Error" : data.emailSubject,
-            text: data.type == "Error" ? data.error.message : JSON.stringify(properties, null, 2)
+            text: data.type == "Error" ? data.error.message : JSON.stringify(data, null, 2)
         };
     
         const info = await transporter.sendMail(mailOptions);
@@ -36,5 +36,6 @@ module.exports = async function (ctx, data) {
     catch (err) {
         ctx.log("Failed to send email.");
         ctx.log(err);
+        throw(err)
     }
 }
