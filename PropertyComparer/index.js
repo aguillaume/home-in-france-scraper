@@ -22,9 +22,9 @@ module.exports = async function (ctx, agencies) {
     let allNewProperties = [];
 
     for (const agency of agencies) {
-        ctx.log(`Scraped ${agency.agencyName} a bunch... fround ${agency.liveProperties.length} properties.`)
+        ctx.log(`Scraped ${agency.agencyName} a bunch... found ${agency.liveProperties.length} properties.`)
         let agencyNewProperties = [];
-        let saveRequired= false;
+        let saveRequired = false;
         const blob = agency.agencyName.replace(" ", "") + "Data.json";
 
         let [text, blockBlob, response] = await readProperties(container, blob);

@@ -10,7 +10,7 @@
  */
 
 const df = require("durable-functions");
-const scrapers = ["LaForetScraper", "LaForetScraper", "LaForetScraper", "LaForetScraper"];
+const scrapers = ["LaForetScraper"];
 
 function log(ctx, msg) {
     if (!ctx.df.isReplaying) ctx.log(msg);
@@ -22,10 +22,8 @@ module.exports = df.orchestrator(function* (ctx) {
     const theInput = ctx.df.getInput();
 
     let tasks = [];
-    let id = 1;
     for (const scraper of scrapers) {
-        tasks.push(ctx.df.callActivity(scraper, id));
-        id++;
+        tasks.push(ctx.df.callActivity(scraper));
     }
 
     let allLiveProperties = [];

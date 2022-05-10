@@ -16,26 +16,8 @@ const webScraper = require("../App/WebScraper");
 const baseUrl = "https://www.laforet.com";
 const url = baseUrl+"/acheter/achat-maison?filter%5Bcities%5D=13117%2C3000874%2C13015&filter%5Barea%5D=43.4509%2C5.2654%2C10%2CVitrolles&filter%5Bmax%5D=500000&filter%5Bbedrooms%5D=3&filter%5Bsurface%5D=90&filter%5Bsurface_ground%5D=400";
 
-async function scrapeProperties(ctx, id) {
+async function scrapeProperties(ctx) {
     
-    if(id % 2 == 0)  {
-        throw new Error('Make it fail ' + id); 
-    }
-
-    return {
-        agencyName: "La Foret",
-        liveProperties: [{
-            "title": "Maison T5 Rognac",
-            "price": "499 000 €",
-            "link": "https://www.laforet.com/agence-immobiliere/rognac/acheter/rognac/maison-5-pieces-21027848"
-        },
-        {
-            "title": "Maison T7 Les Pennes-Mirabeau",
-            "price": "430 000 €",
-            "link": "https://www.laforet.com/agence-immobiliere/lespennesmirabeau/acheter/les-pennes-mirabeau/maison-7-pieces-16810788"
-        }]
-    };
-
     const rawData = await webScraper.getRawData(url);
     const $ = cheerio.load(rawData);
 
