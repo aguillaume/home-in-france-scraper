@@ -30,9 +30,7 @@ function symmetricDifference(context, oldProperties, newProperties, propertyHist
     })
 
     return {
-        propertiesAdded: {
-            new: added
-        },
+        propertiesAdded: added,
         propertiesRemoved: removed
     }
 }
