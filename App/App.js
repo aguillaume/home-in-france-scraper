@@ -51,7 +51,7 @@ async function run(context) {
     
             results.forEach((result) => {
                 if (result.status == "fulfilled" && result.value && result.value.newProperties && 
-                    (result.value.newProperties.new.length > 0 || result.value.newProperties.reAdded.length)) 
+                    result.value.newProperties.length > 0 ) 
                     allNewProperties.push(result.value);
             });
     
@@ -79,7 +79,7 @@ function handleScrapedData(scraper) {
 
         const diff = propertyComparer.symmetricDifference(ctx, savedProperties, liveProperties, propertyHistory)
 
-        if (diff.propertiesAdded.new.length > 0 || diff.propertiesAdded.reAdded.length > 0 || diff.propertiesRemoved.length > 0) {
+        if (diff.propertiesAdded.length > 0 || diff.propertiesRemoved.length > 0) {
             scraper.saveProperties(liveProperties, diff);
         } else {
             ctx.log(`Nothing new from ${scraper.agency}.`)
