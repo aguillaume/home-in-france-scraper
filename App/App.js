@@ -20,27 +20,27 @@ async function run(context) {
     const laForetProperties = 
         laForet.scrapeData()
             .then(handleScrapedData(laForet))
-            .catch(err => ctx.log(err));
+            .catch(handleError(laForet));
     
     const orpiProperties = 
         orpi.scrapeData()
             .then(handleScrapedData(orpi))
-            .catch(err => ctx.log(err));
+            .catch(handleError(orpi));
     
     const immoDuParticulierProperties = 
         immoDuParticulier.scrapeData()
             .then(handleScrapedData(immoDuParticulier))
-            .catch(err => ctx.log(err));
+            .catch(handleError(immoDuParticulier));
 
     const bienIciProperties = 
         bienIci.scrapeData()
             .then(handleScrapedData(bienIci))
-            .catch(err => ctx.error(err));
+            .catch(handleError(bienIci));
 
     const atHomeImmobilierProperties = 
         atHomeImmobilier.scrapeData()
             .then(handleScrapedData(atHomeImmobilier))
-            .catch(err => ctx.log(err));
+            .catch(handleError(atHomeImmobilier));
     
     const scrapers = [laForetProperties, orpiProperties, immoDuParticulierProperties, bienIciProperties, atHomeImmobilierProperties
     ];
@@ -89,5 +89,12 @@ function handleScrapedData(scraper) {
             agency: scraper.agency,
             newProperties: diff.propertiesAdded
         }
+    }
+}
+
+function handleError(scraper) {
+    return (err) => {
+        ctx.log(`Scraper ${scraper.agency} ran into an error...`)
+        ctx.log(err)
     }
 }
