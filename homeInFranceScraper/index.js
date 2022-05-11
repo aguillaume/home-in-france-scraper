@@ -11,7 +11,7 @@ module.exports = async function (context, myTimer) {
 
     context.log(`Start Time of Scrape: ${new Date()}`);
     
-    // await app.run(context);
+    await app.run(context);
 
     context.log(`End Time of Scrape: ${new Date()}`);
 };
